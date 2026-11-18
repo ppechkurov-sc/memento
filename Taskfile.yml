@@ -1,0 +1,13 @@
+version: "3"
+
+tasks:
+  default:
+    desc: List all tasks
+    cmds:
+      - task --list-all
+    silent: true
+
+  present:
+    desc: Launch the presentation in a detached Kitty window from Foot
+    cmds:
+      - foot kitty --detach -o font_size=14 presenterm presentation.md

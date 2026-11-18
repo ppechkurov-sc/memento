@@ -26,7 +26,8 @@
               gnumake
               jq
               nodejs_24
-kitty
+              kitty
+              go-task
               (presenterm.overrideAttrs (oldAttrs: {
                 nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ pkg-config ];
                 buildInputs = (oldAttrs.buildInputs or [ ]) ++ [ oniguruma ];

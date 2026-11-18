@@ -226,7 +226,7 @@ speaker_note: |
 ROLES
 =====================================
 
-```mermaid +render +width:75%
+```mermaid +render +width:45%
 sequenceDiagram
     participant E as Editor
     participant H as History
@@ -249,6 +249,30 @@ speaker_note: |
   Some translation difficulties here, so let's stick with original English words.
 
   Think of the Memento as a sealed envelope: History can store it and pass it back, but cannot read or change the saved text. The editor creates it and restores from it because it knows how its state is represented.
+-->
+
+<!-- end_slide -->
+
+Narrow and wide views
+=====================
+
+<!-- pause -->
+
+```file
+path: src/editor.ts
+language: typescript
+```
+
+```file
+path: src/history.ts
+language: typescript
+start_line: 4
+end_line: 8
+```
+
+<!--
+speaker_note: |
+  The Memento value is an opaque token. Editor keeps the corresponding text in its private WeakMap; History only stores the token and passes it back. The runnable example uses Node's built-in TypeScript type stripping, which runs the code but does not type-check it. A real undo history would keep a stack of these tokens.
 -->
 
 <!-- end_slide -->

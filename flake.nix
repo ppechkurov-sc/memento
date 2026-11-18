@@ -26,6 +26,8 @@
               gnumake
               jq
               nodejs_24
+              typescript
+              biome
               mermaid-cli
               kitty
               go-task

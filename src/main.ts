@@ -2,51 +2,45 @@ import { createInterface } from "node:readline";
 import { Editor } from "./editor.ts";
 import { History } from "./history.ts";
 
-const editor = new Editor();
-const history = new History();
-let redoHistory = new History();
-
 console.clear();
 const instructions =
   "Type into the editor. Ctrl+Z undoes a line. Ctrl+Y redoes it. Ctrl+D on an empty line exits.";
 console.log(instructions);
 
-const input = createInterface({
+const editor = new Editor();
+const history = new History();
+
+const stdin = createInterface({
   input: process.stdin,
   output: process.stdout,
-  prompt: "",
+  prompt: "", // disable default propmt
+});
+// Handle CTRL+Z to undo
+stdin.on("SIGTSTP", () => {
+  const memento = editor.save();
+  history.undo(memento);
+  render();
 });
 
-input.on("SIGTSTP", () => {
-  restoreFrom(history, redoHistory);
-});
-
+// Handle CTRL+Y to redo
 process.stdin.on("keypress", (_character, key) => {
   if (key.ctrl && key.name === "y") {
-    restoreFrom(redoHistory, history);
+    const memento = editor.save();
+    history.redo(memento);
+    render();
   }
 });
 
-function restoreFrom(source: History, destination: History): void {
-  const previous = source.takeLatest();
-  if (!previous) {
-    return;
-  }
-
-  destination.keep(editor.save());
-  editor.restore(previous);
+function render(): void {
   console.clear();
   console.log(instructions);
   process.stdout.write(editor.text);
-  input.prompt(true);
 }
 
-for await (const line of input) {
-  const snapshot = editor.save();
-  history.keep(snapshot);
-
-  redoHistory = new History();
-  editor.setText(`${editor.text + line}\n`);
+for await (const line of stdin) {
+  const memento = editor.save();
+  history.save(memento);
+  editor.text = `${editor.text + line}\n`;
 }
 
-input.close();
+stdin.close();

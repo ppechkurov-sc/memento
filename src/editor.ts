@@ -1,32 +1,27 @@
-const mementoBrand: unique symbol = Symbol("Memento");
-
 export interface Memento {
-  readonly [mementoBrand]: true;
+  restore(): void;
 }
 
+// Originator: owns the current text and creates snapshots of its state.
 export class Editor {
-  #text = "";
-  #savedText = new WeakMap<Memento, string>();
+  text = "";
 
-  get text(): string {
-    return this.#text;
+  save(): Memento {
+    return new Snapshot(this, this.text);
   }
+}
 
-  setText(text: string): void {
+// Memento: privately holds saved text and restores the editor that created it.
+class Snapshot implements Memento {
+  readonly #editor: Editor;
+  readonly #text: string;
+
+  constructor(editor: Editor, text: string) {
+    this.#editor = editor;
     this.#text = text;
   }
 
-  save(): Memento {
-    const memento: Memento = Object.freeze({ [mementoBrand]: true as const });
-    this.#savedText.set(memento, this.#text);
-    return memento;
-  }
-
-  restore(memento: Memento): void {
-    const savedText = this.#savedText.get(memento);
-    if (savedText === undefined) {
-      throw new Error("This memento was not created by this editor.");
-    }
-    this.#text = savedText;
+  restore(): void {
+    this.#editor.text = this.#text;
   }
 }

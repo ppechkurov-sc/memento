@@ -218,7 +218,42 @@ sequenceDiagram
 
 <!--
 speaker_note: |
-  The editor knows how its text is stored, so it creates the snapshot and knows how to restore it. History only keeps snapshots and returns one when Ctrl+Z is pressed, it does not inspect the saved text.
+  In GoF's role names, the editor is the Originator: it creates a Memento and uses it to restore its state. The Memento is the saved state. History is the Caretaker: it keeps Mementos and returns one on Ctrl+Z without inspecting its contents.
 -->
 
 <!-- end_slide -->
+
+ROLES
+=====================================
+
+```mermaid +render +width:75%
+sequenceDiagram
+    participant E as Editor
+    participant H as History
+    E->>E: Save text in a snapshot
+    E->>H: Give snapshot to keep
+    H->>E: Return snapshot on Ctrl+Z
+    E->>E: Restore text from snapshot
+```
+
+- **Originator** - «Создатель»: the editor, which creates snapshots and restores its text.
+<!-- pause -->
+- **Memento** - «Снимок»: the saved editor state, ready to be restored.
+<!-- pause -->
+- **Caretaker** - «Опекун»: history, which keeps snapshots and returns one on undo.
+
+<!--
+speaker_note: |
+  The Russian terminology can be confusing because «Хранитель» is used as a name for the pattern, while «Снимок» describes the saved Memento object more directly. 
+
+  Some translation difficulties here, so let's stick with original English words.
+
+  Think of the Memento as a sealed envelope: History can store it and pass it back, but cannot read or change the saved text. The editor creates it and restores from it because it knows how its state is represented.
+-->
+
+<!-- end_slide -->
+
+<!-- jump_to_middle -->
+<!-- font_size: 4 -->
+THE END
+=====================================

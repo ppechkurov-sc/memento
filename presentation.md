@@ -1,23 +1,45 @@
+<!-- alignment: center -->
+
 MEMENTO
 ===============
 
+<!-- font_size: 2 -->
+<!-- jump_to_middle -->
+<!-- speaker_note: go to next slide when ready -->
+**Undo/redo without breaking encapsulation**
+<!-- font_size: 1 -->
+
+<!-- end_slide -->
+
 <!-- alignment: center -->
 
-**Undo/redo without breaking encapsulation**
+MEMENTO
+=====================
+<!-- speaker_note: Press Space to reveal the word origin. -->
+<!-- pause -->
 
-Behavioral design pattern from the Gang of Four
+From Latin, literally *mementō*, “remember!”
+<!-- speaker_note: Press Space to reveal a definition. -->
+<!-- pause -->
 
-![image:width:45%](meme.jpg)
+In English (Oxford dictionary), a thing that you keep or give to somebody to remind you or them of a person or place.
 
-Node.js + TypeScript • ~15-minute engineering talk
+<!-- speaker_note: Press Space again to reveal the image and movie description. -->
+<!-- pause -->
 
 <!--
 speaker_note: |
-  Imagine a user editing a draft or an internal configuration form. They
-  change their mind and press Undo. How can the application return to an
-  earlier state without exposing all of the object's implementation details?
-  Today we'll use this familiar problem to understand the Memento pattern
-  as described by the Gang of Four and implement it in TypeScript.
+  The Russian GoF edition calls the pattern «Хранитель». It is an established label, but «снимок состояния» describes the Memento object more clearly.
+-->
+<!-- pause -->
+
+![image:width:45%](meme.jpg)
+
+*In Christopher Nolan’s film Memento (2000), Leonard Shelby (Guy Pearce) uses photos, notes, and tattoos to investigate his wife’s murder because he cannot form new memories.*
+
+<!--
+speaker_note: |
+  The film is a memory-related analogy, not the source of the pattern. Christopher Nolan wrote and directed the 2000 film, and Guy Pearce plays Leonard Shelby. GoF’s book describes the Memento pattern in 1994, before the film.
 -->
 
 <!-- end_slide -->

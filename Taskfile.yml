@@ -10,7 +10,7 @@ tasks:
   present:
     desc: Launch the presentation in a detached Kitty window from Foot
     cmds:
-      - foot kitty --detach -o font_size=14 presenterm presentation.md
+      - foot kitty --detach -o font_size=14 presenterm presentation.md --publish-speaker-notes
 
   notes:
     desc: Listen for presentation speaker notes in a detached Kitty window

@@ -26,6 +26,7 @@
               gnumake
               jq
               nodejs_24
+              mermaid-cli
               kitty
               go-task
               (presenterm.overrideAttrs (oldAttrs: {

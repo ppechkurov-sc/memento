@@ -1,27 +1,72 @@
-export interface Memento {
-  restore(): void;
+// Memento class that stores the state of the Originator
+class Memento {
+  #state: string;
+
+  constructor(state: string) {
+    this.#state = state;
+  }
+
+  public get state(): string {
+    return this.#state;
+  }
 }
 
-// Originator: owns the current text and creates snapshots of its state.
+const instructions =
+  "Type into the editor. Ctrl+Z undoes a line. Ctrl+Y redoes it.";
+
+// Originator class owns the current text and creates snapshots of its state.
 export class Editor {
-  text = "";
+  #text: string = "";
 
-  save(): Memento {
-    return new Snapshot(this, this.text);
+  public get text(): string {
+    return this.#text;
+  }
+
+  public update(line: string): void {
+    this.#text += `${line}\n`;
+  }
+
+  public snapshot(): Memento {
+    return new Memento(this.text);
+  }
+
+  public restore(memento: Memento): void {
+    this.#text = memento.state;
+  }
+
+  public render(): void {
+    console.clear();
+    console.log(instructions);
+    process.stdout.write(this.#text);
   }
 }
 
-// Memento: privately holds saved text and restores the editor that created it.
-class Snapshot implements Memento {
-  readonly #editor: Editor;
-  readonly #text: string;
+// Caretaker class captures snapshots around an edit and restores them for undo/redo.
+export class History {
+  #undoStack: Memento[] = [];
+  #redoStack: Memento[] = [];
 
-  constructor(editor: Editor, text: string) {
-    this.#editor = editor;
-    this.#text = text;
+  public save(memento: Memento): void {
+    this.#undoStack.push(memento);
   }
 
-  restore(): void {
-    this.#editor.text = this.#text;
+  public undo(current: Memento): Memento | undefined {
+    const previous = this.#undoStack.pop();
+    if (!previous) {
+      return;
+    }
+
+    this.#redoStack.push(current);
+    return previous;
+  }
+
+  public redo(current: Memento): Memento | undefined {
+    const next = this.#redoStack.pop();
+    if (!next) {
+      return;
+    }
+
+    this.#undoStack.push(current);
+    return next;
   }
 }

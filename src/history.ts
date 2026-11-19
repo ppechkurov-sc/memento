@@ -1,31 +1,32 @@
-import type { Memento } from "./editor.ts";
+import type { AddLineCommand } from "./add-line-command.ts";
 
-// Caretaker: manages undo/redo snapshots without reading their saved state.
+// Command history: orders undo/redo; each command acts as a Caretaker.
 export class History {
-  #undoStack: Memento[] = [];
-  #redoStack: Memento[] = [];
+  #undoStack: AddLineCommand[] = [];
+  #redoStack: AddLineCommand[] = [];
 
-  save(snapshot: Memento): void {
-    this.#undoStack.push(snapshot);
+  execute(command: AddLineCommand): void {
+    command.execute();
+    this.#undoStack.push(command);
     // A new edit discards available redo steps.
     this.#redoStack.length = 0;
   }
 
-  undo(current: Memento): void {
+  undo(): void {
     const previous = this.#undoStack.pop();
     if (!previous) {
       return;
     }
 
-    this.#redoStack.push(current);
-    previous.restore();
+    previous.undo();
+    this.#redoStack.push(previous);
   }
 
-  redo(current: Memento): void {
+  redo(): void {
     const next = this.#redoStack.pop();
     if (!next) return;
 
-    this.#undoStack.push(current);
-    next.restore();
+    next.redo();
+    this.#undoStack.push(next);
   }
 }

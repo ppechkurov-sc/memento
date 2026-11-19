@@ -1,5 +1,6 @@
 import { createInterface } from "node:readline";
-import { Editor, History } from "./editor.ts";
+import { Editor } from "./editor.ts";
+import { History } from "./history.ts";
 
 const readline = createInterface({
   input: process.stdin,
@@ -7,18 +8,18 @@ const readline = createInterface({
   prompt: "", // Disable the default prompt.
 });
 
-const editor = new Editor();
+const editor = new Editor(readline);
 const history = new History();
 
 // Handle CTRL+Z to undo
 readline.on("SIGTSTP", () => {
   const current = editor.snapshot();
-  const meme = history.undo(current);
-  if (!meme) {
+  const previous = history.undo(current);
+  if (!previous) {
     return;
   }
 
-  editor.restore(meme);
+  editor.restore(previous);
   editor.render();
 });
 
@@ -26,12 +27,12 @@ readline.on("SIGTSTP", () => {
 process.stdin.on("keypress", (_character, key) => {
   if (key.ctrl && key.name === "y") {
     const current = editor.snapshot();
-    const meme = history.redo(current);
-    if (!meme) {
+    const next = history.redo(current);
+    if (!next) {
       return;
     }
 
-    editor.restore(meme);
+    editor.restore(next);
     editor.render();
   }
 });
